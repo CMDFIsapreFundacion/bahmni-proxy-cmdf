@@ -59,4 +59,8 @@ RUN apk del .build-deps && \
     rm -rf /var/cache/apk/*
 
 # Rename and move mod_wsgi module to apache2 modules
-RUN mv /usr/lib/python*/site-packages/mod_wsgi/server/mod_wsgi-*.so /usr/local/apache2/modules/mod_wsgi.so
+#RUN mv /usr/lib/python*/site-packages/mod_wsgi/server/mod_wsgi-*.so /usr/local/apache2/modules/mod_wsgi.so
+
+# Rename and move mod_wsgi module to apache2 modules
+RUN mv /usr/lib/python*/site-packages/mod_wsgi/server/mod_wsgi-*.so /usr/local/apache2/modules/mod_wsgi.so || (echo "Error moving mod_wsgi module" && ls -l /usr/lib/python*/site-packages/mod_wsgi/server && exit 1)
+
