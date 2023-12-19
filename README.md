@@ -17,4 +17,3 @@ This repository contains resources for building Docker image for Bahmni Proxy Co
 ### Notes:
 
   * Bahmni proxy has configuration to intercept websocket request to support [speech-assistant feature](https://github.com/Bahmni/speech-assistant-package)
-.
