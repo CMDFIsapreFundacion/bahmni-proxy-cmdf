@@ -31,13 +31,13 @@ RUN apk add --no-cache --virtual .build-deps \
 		apr-dev \
 		apr-util-dev \
 		gcc \
-        	libc-dev \
+        libc-dev \
 		apache2-dev \
 		apache2-utils \
 		py-pip \
 		tar \
-        	python3-dev \
-        	libffi-dev \
+        python3-dev \
+        libffi-dev \
 		tzdata
 
 RUN python3 -m venv /opt/certbot/ &&\
@@ -48,32 +48,8 @@ RUN mkdir -p /var/log/client-side-logs/ &&\
 	touch /var/log/client-side-logs/client-side.log &&\
 	chmod 777 /var/log/client-side-logs/client-side.log &&\
 	ln -s /usr/local/apache2/htdocs/client_side_logging /usr/lib/python3*/site-packages/ 
- 
-# Create a virtual environment and install required Python packages
-#RUN pip install Flask pyyaml==6.0.1 mod_wsgi 
 
-# Create a virtual environment and install required Python packages
-RUN python3 -m venv /opt/myapp
-RUN source /opt/myapp/bin/activate && \
-    pip install --upgrade pip && \
-    pip install Flask && \
-    pip install pyyaml==6.0.1 && \
-    pip install mod_wsgi && \
-    deactivate
-
-
-
-# Remove the build dependencies and clean up
-RUN apk del .build-deps && \
-    rm -rf /var/cache/apk/*
+RUN pip install Flask pyyaml==6.0.1 mod_wsgi
 
 # Rename and move mod_wsgi module to apache2 modules
-#RUN mv /usr/lib/python*/site-packages/mod_wsgi/server/mod_wsgi-*.so /usr/local/apache2/modules/mod_wsgi.so
-# Rename and move mod_wsgi module to apache2 modules
-RUN sh -c 'mv /usr/lib/python*/site-packages/mod_wsgi/server/mod_wsgi-*.so /usr/local/apache2/modules/mod_wsgi.so'
-
-
-# Rename and move mod_wsgi module to apache2 modules
-#RUN mv $(find /usr/lib/python*/site-packages/mod_wsgi/server/ -name "mod_wsgi-*.so" -type f) /usr/local/apache2/modules/mod_wsgi.so
-
-
+RUN mv /usr/lib/python*/site-packages/mod_wsgi/server/mod_wsgi-*.so /usr/local/apache2/modules/mod_wsgi.so
