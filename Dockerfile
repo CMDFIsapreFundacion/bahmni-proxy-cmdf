@@ -52,10 +52,16 @@ RUN mkdir -p /var/log/client-side-logs/ &&\
 # Create a virtual environment and install required Python packages
 #RUN pip install Flask pyyaml==6.0.1 mod_wsgi 
 
-RUN pip install --upgrade pip && \
-pip install Flask  && \
-pip install pyyaml==6.0.1  && \
-pip install mod_wsgi
+# Create a virtual environment and install required Python packages
+RUN python3 -m venv /opt/myapp
+RUN source /opt/myapp/bin/activate && \
+    pip install --upgrade pip && \
+    pip install Flask && \
+    pip install pyyaml==6.0.1 && \
+    pip install mod_wsgi && \
+    deactivate
+
+
 
 # Remove the build dependencies and clean up
 RUN apk del .build-deps && \
