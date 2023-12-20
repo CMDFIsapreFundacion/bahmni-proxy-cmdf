@@ -19,7 +19,7 @@ COPY resources/src.jpeg /usr/local/apache2/htdocs/src.jpeg
 RUN mkdir /var/cache/mod_proxy
 RUN rm -rf /usr/local/apache2/cgi-bin/test-cgi
 RUN rm -rf /usr/local/apache2/cgi-bin/printenv*
-	
+    
 RUN apk add --update openssl && \
     rm -rf /var/cache/apk/*
 RUN cd /etc/ &&\
@@ -28,28 +28,23 @@ RUN cd /etc/ &&\
     openssl req -new -newkey rsa:4096 -days 365 -nodes -x509 -subj "/C=US/ST=Denial/L=Springfield/O=Dis/CN=localhost" -keyout key.pem  -out cert.pem
 
 RUN apk add --no-cache --virtual .build-deps \
-		apr-dev \
-		apr-util-dev \
-		gcc \
+        apr-dev \
+        apr-util-dev \
+        gcc \
         libc-dev \
-		apache2-dev \
-		apache2-utils \
-		py-pip \
-		tar \
+        apache2-dev \
+        apache2-utils \
+        py-pip \
+        tar \
         python3-dev \
         libffi-dev \
-		tzdata
+        tzdata
 
-RUN python3 -m venv /opt/certbot/ &&\
-        /opt/certbot/bin/pip install certbot &&\
-        ln -s /opt/certbot/bin/certbot /usr/bin/certbot
+RUN python3 -m venv /opt/venv
+RUN /opt/venv/bin/pip install certbot
+RUN ln -s /opt/venv/bin/certbot /usr/bin/certbot
 
-RUN mkdir -p /var/log/client-side-logs/ &&\
-	touch /var/log/client-side-logs/client-side.log &&\
-	chmod 777 /var/log/client-side-logs/client-side.log &&\
-	ln -s /usr/local/apache2/htdocs/client_side_logging /usr/lib/python3*/site-packages/ 
-
-RUN pip install Flask pyyaml==6.0.1 mod_wsgi
+RUN /opt/venv/bin/pip install Flask pyyaml==6.0.1 mod_wsgi
 
 # Rename and move mod_wsgi module to apache2 modules
-RUN mv /usr/lib/python*/site-packages/mod_wsgi/server/mod_wsgi-*.so /usr/local/apache2/modules/mod_wsgi.so
+RUN mv /opt/venv/lib/python*/site-packages/mod_wsgi/server/mod_wsgi-*.so /usr/local/apache2/modules/mod_wsgi.so
